@@ -2,18 +2,21 @@
 	import { onMount, type Snippet } from "svelte";
     import { windows, currentWindowId } from "$lib/stores";
     import type { ManagedWindow } from "$lib/stores";
+    import { twMerge } from "tailwind-merge";
+	import consola from "consola";
 
     interface Props {
         windowTitle: string;
-        resizable: boolean;
-        iconUrl: URL;
+        iconUrl?: URL;
+        overrideWindowClass?: string;
         children: Snippet
     }
 
-    let {windowTitle, resizable, iconUrl, children} = $props();
+    let {windowTitle, iconUrl = undefined, overrideWindowClass = undefined, children}: Props = $props();
 
     let element: HTMLDivElement;
-    let id: number = $currentWindowId;
+    let topBar: HTMLDivElement;
+    let id: number = -1;
     let isDragging = false;
     let offsetX: number, offsetY: number;
 
@@ -21,15 +24,24 @@
         closed: false,
         hidden: false,
         icon: iconUrl,
-        title: windowTitle
+        title: windowTitle,
+        focused: false
     });
 
     onMount(() => {
+        id = $currentWindowId++;
+        consola.debug(`Window #${id} mounted`);
+
         $windows.set(id, window);
         $windows = $windows;
-        $currentWindowId++;
+
+        element.style.top = 30 + id*45 + "px";
+        element.style.left = 30 + id*45 + "px";
         
-        element.addEventListener("mousedown", e => {
+        topBar.addEventListener("mousedown", e => {
+            if(window.hidden || window.closed) return;
+            focus();
+            consola.debug(`Window #${id} detected possible drag start`);
             isDragging = true;
             offsetX = e.offsetX;
             offsetY = e.offsetY;
@@ -48,41 +60,63 @@
 
 
     function updateStore() {
+        consola.info(`Updating store for window #${id}`);
         $windows.set(id, window);
         $windows = $windows;
     }
 
-    const hide = () => { window.hidden = true; updateStore() };
-    const close = () => { window.closed = true; updateStore() };
+    const hide = () => { 
+        consola.info(`Hiding window #${id}`);
+        window.hidden = true;
+        updateStore()
+    };
+
+    const close = () => { 
+        consola.info(`Closing window #${id}`);
+        window.closed = true;
+        updateStore() 
+    };
 
     windows.subscribe(windows => {
         let thisWindow = windows.get(id);
         if(thisWindow) {
-            console.log(`${id} Recieved update`);
+            consola.info(`Window #${id} Recieved update`);
             window = thisWindow;
         }
-    })
+    });
+
+    function focus() {
+        consola.info(`Granting window #${id} focus`);
+        $windows.forEach(val => {
+            if(val.focused) {
+                consola.info(`Revoking window #${id} focus`);
+            }
+            val.focused = false;
+        });
+        $windows = $windows;
+        window.focused = true;
+        updateStore();
+    }
+
+    export { id };
 </script>
 
 
-<div bind:this={element} class="bg-white pl-2 pr-2 w-2xl absolute rounded-md">
-    {#if !window.hidden && !window.closed}
-    <div role="dialog" tabindex={id} class="top-bar w-full h-10 flex justify-between">
+<div onclick={_ => focus()} class:z-50={window.focused} bind:this={element} class:opacity-0={window.hidden || window.closed} class={twMerge("bg-white pl-2 pr-2 w-2xl absolute rounded-2xl drop-shadow-2xl", overrideWindowClass)}>
+    <div bind:this={topBar} role="dialog" tabindex={id} class="top-bar w-full h-10 flex justify-between">
         <div class="info flex">
-            <img class="mr-2" alt={windowTitle + "icon"} width="20px" height="20px" src={iconUrl}>
-            <p class="text-2xl">{windowTitle}</p>
+            {#if iconUrl}
+            <img class="mr-2" alt={windowTitle + "icon"} width="20px" height="20px" src={iconUrl.toString()}>
+            {/if}
+            <p class="text-2xl mix-blend-difference invert grayscale">{windowTitle}</p>
         </div>
 
-        <div class="actions">
-            <button onclick={_ => hide()}>-</button>
-            <button>[]</button>
-            <button onclick={_ => close()}>x</button>
-
+        <div class="actions items-center">
+            <button class="mix-blend-difference invert grayscale text-2xl" onclick={_ => hide()}>-</button>
+            <button class="mix-blend-difference invert grayscale text-2xl" onclick={_ => close()}>x</button>
         </div>
     </div>
     <div class="content">
         {@render children?.()}
     </div>
-{/if}
-
 </div>

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Icon from "$lib/components/desktop/taskbar/Icon.svelte";
 	import Window from "$lib/components/desktop/Window.svelte";
+	import Example from "$lib/components/windows/Example.svelte";
+	import Game from "$lib/components/windows/Game.svelte";
 	import { windows } from "$lib/stores";
 </script>
 
@@ -9,9 +11,10 @@
     <h1>Welcome to my website!</h1>
 </div>
 
-<Window windowTitle="test window" resizable={true} iconUrl={new URL("https://www.frii.site/favicon.svg")}><h1>Hello</h1></Window>
+<Example/>
+<Game/>
 
-<div class="absolute bottom-0 w-full bg-white flex">
+<div class="absolute bottom-0 w-full bg-white flex pl-2">
 {#each $windows as rawWindow}
 {@const id = rawWindow[0]}
 {@const window = rawWindow[1]}

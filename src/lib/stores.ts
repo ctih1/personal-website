@@ -5,8 +5,11 @@ export interface ManagedWindow {
     title: string
     closed: boolean,
     hidden: boolean,
-    icon: URL,
+    focused: boolean,
+    icon?: URL,
 }
 
+type WindowId = number;
+
 export const currentWindowId: Writable<number> = writable(0);
-export const windows: Writable<Map<Number, ManagedWindow>> = writable(new Map());
+export const windows: Writable<Map<WindowId, ManagedWindow>> = writable(new Map());

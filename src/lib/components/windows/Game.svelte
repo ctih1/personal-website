@@ -13,7 +13,7 @@
     onMount(() => {
         const id = windowElement.id;
         const window =  $windows.get(id)!;
-        
+
         window.closed = true;
         window.hidden = true;
         window.icon = new URL("https://www.frii.site/favicon.svg");
@@ -35,6 +35,7 @@
 <Window 
     bind:this={windowElement}
     windowTitle="Number guessing game" 
+    overrideWindowClass="bg-black"
 >
     <div id="contents" class="pb-2">
         <p class="absolute right-10">Guesses: {guesses}</p>
@@ -55,3 +56,10 @@
     </div>
 
 </Window>
+
+
+<style>
+    * {
+        color: white;
+    }
+</style>

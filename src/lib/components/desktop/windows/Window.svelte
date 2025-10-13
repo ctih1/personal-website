@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, type Snippet } from "svelte";
-    import { windows, currentWindowId } from "$lib/stores";
+    import { windows, currentWindowId, focusId } from "$lib/stores";
     import type { ManagedWindow } from "$lib/stores";
     import { twMerge } from "tailwind-merge";
 	import consola from "consola";
@@ -103,6 +103,8 @@
         });
         $windows = $windows;
         window.focused = true;
+
+        element.style.zIndex = String($focusId++);
         updateStore();
     }
 

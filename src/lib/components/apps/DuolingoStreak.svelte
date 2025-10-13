@@ -40,7 +40,7 @@
 
     async function getDuolingoStreak() {
         error = "";
-        await fetch(`https://www.duolingo.com/2017-06-30/users?username=${username}`)
+        await fetch(`/api/duolingo?username=${username}`)
             .then(response => response.json()).then(data => {
                 const userData = data.users[0];
                 if(!userData) {

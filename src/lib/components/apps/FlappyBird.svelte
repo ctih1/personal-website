@@ -16,6 +16,7 @@
 
     let pipes: [Pipe, Pipe][] = $state([]);
 
+    let gameArea: HTMLDivElement;
     let bird: HTMLDivElement;
     let birdX = $state(128);
     let birdWidth = 32;
@@ -118,6 +119,13 @@
 
     onMount(async () => {
         gameLoop();
+
+        gameArea.addEventListener("touchstart", e => {
+            if(!birdHit) {
+                paused = false;
+                velocity = 12;
+            }
+        })
     });
 
     function resetGame() {
@@ -143,7 +151,7 @@
     overrideWindowClass="w-[600px] h-[600px]"
 >
 
-<div class="game relative overflow-hidden w-full h-[560px] max-w-full max-h-full">
+<div bind:this={gameArea} class="game relative overflow-hidden w-full h-[560px] max-w-full max-h-full">
     <p class="z-50 absolute">{Math.round(renderedFps*10)/10}fps</p>
     <div class="bird absolute w-8 h-8 left-32 z-[3] bg-red-600" bind:this={bird}>
         {#if debug}

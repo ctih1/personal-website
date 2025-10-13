@@ -52,7 +52,7 @@
         document.addEventListener("mousemove", e => {
             if(!isDragging) return;
             element.style.left = e.clientX - offsetX + "px";
-            element.style.top = e.clientY + offsetY + "px";
+            element.style.top = e.clientY - offsetY + "px";
         })
 
         document.addEventListener("mouseup", _ => {

@@ -37,21 +37,22 @@
         $windows.set(id, window);
         $windows = $windows;
 
-        element.style.top = 30 + id*45 + "px";
-        element.style.left = 30 + id*45 + "px";
+        element.style.top = 30 + $windows.entries().filter(v => !v[1].closed && !v[1].hidden).toArray().length * 45 + "px";
+        element.style.left = 30 + $windows.entries().filter(v => !v[1].closed && !v[1].hidden).toArray().length*45 + "px";
         
         topBar.addEventListener("mousedown", e => {
             if(window.hidden || window.closed) return;
             focus();
             isDragging = true;
-            offsetX = e.offsetX;
-            offsetY = e.offsetY;
+            const rect = topBar.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
         })
 
         document.addEventListener("mousemove", e => {
             if(!isDragging) return;
-            element.style.left = e.pageX - offsetX + "px";
-            element.style.top = e.pageY - offsetY + "px";
+            element.style.left = e.clientX - offsetX + "px";
+            element.style.top = e.clientY + offsetY + "px";
         })
 
         document.addEventListener("mouseup", _ => {

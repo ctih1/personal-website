@@ -8,7 +8,7 @@
 
 	let { children } = $props();
 
-	consola.level = 4;
+	consola.level = 5;
 </script>
 
 <svelte:head>

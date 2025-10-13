@@ -23,6 +23,10 @@ h2 {
     font-weight: 600;
 }
 
+html {
+    width: 100vw;
+}
+
 body {
     overflow: hidden;
 }

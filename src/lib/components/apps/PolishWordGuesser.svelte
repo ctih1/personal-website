@@ -64,7 +64,7 @@
     <h2>{word}</h2>
     {#if resultText}
         <h2 class="text-green-700" class:text-red-500={resultText.endsWith("incorrect!")}>{resultText}</h2>
-        <p>You guessed <span class="text-green-500" class:text-red-500={usersGuess==="fake"}>{usersGuess}</span>, but it was <span class="text-green-500" class:text-red-500={isFake}>{isFake ? "fake" : "real"}!</span></p>
+        <p>You guessed <span class="text-green-500" class:text-red-500={usersGuess==="fake"}>{usersGuess}</span>, whilst the word was <span class="text-green-500" class:text-red-500={isFake}>{isFake ? "fake" : "real"}!</span></p>
         <button onclick={_ => createWord()} class="bg-blue-500 rounded-xl p-1 pl-2 pr-2 transition-colors hover:bg-blue-600 active:bg-blue-800 mt-4">Continue</button>
     {:else}
     <div class="buttons">

@@ -139,7 +139,7 @@
 <Window 
     windowTitle="Flappy bird"
     bind:this={windowElement}
-    iconUrl="bird.svg"
+    iconUrl={new URL("bird.svg", window.location.toString())}
     overrideWindowClass="w-[600px] h-[600px]"
 >
 

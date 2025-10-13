@@ -43,11 +43,11 @@
 <div class="h-14 items-center">
     <button onclick={_ => toggleWindow()} class="flex items-center w-fit">
         {#if icon}
-            <img src={icon.toString()} class="h-12" alt={windowTitle}>
+            <img src={icon.toString()} class="h-12 rounded-sm" alt={windowTitle}>
         {:else}
-            <img src="globe.svg" class="h-12" alt="Placeholder">
+            <img src="globe.svg" class="h-12 rounded-sm" alt="Placeholder">
         {/if}
-        {#if $windows.size < 5}
+        {#if $windows.entries().filter(v => !v[1].hidden && !v[1].closed).toArray().length < 4}
          <p class="text-nowrap ml-2 w-fit">{windowTitle}</p>
         {/if}
     </button>

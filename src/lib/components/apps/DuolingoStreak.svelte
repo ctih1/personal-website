@@ -66,7 +66,7 @@
 
 <Window 
     windowTitle="Duolingo streak"
-    iconUrl={"duolingo.svg"}
+    iconUrl={new URL("duolingo.svg", window.location.toString())}
     overrideWindowClass="w-[500px]"
     bind:this={windowElement}
 >

@@ -113,7 +113,7 @@
     <div bind:this={topBar} role="dialog" tabindex={id} class="top-bar w-full h-10 pt-1 flex justify-between items-center">
         <div class="info flex">
             {#if iconUrl}
-            <img class="mr-2" alt={windowTitle + "icon"} width="20px" height="20px" src={iconUrl.toString()}>
+            <img class="mr-2 aspect-square w-6 rounded-sm" alt={windowTitle + "icon"} src={iconUrl.toString()}>
             {/if}
             <p class="text-xl font-semibold">{windowTitle}</p>
         </div>

@@ -31,12 +31,10 @@
 <div class="items-center w-20 h-fit aspect-square">
     <button onclick={_ => openWindow()} class="w-full justify-center flex flex-col aspect-square">
         {#if icon}
-            <img src={icon.toString()} class="max-h-12 mr-auto ml-auto" alt={windowTitle}>
+            <img src={icon.toString()} class="max-h-12 mr-auto ml-auto rounded-sm" alt={windowTitle}>
         {:else}
-            <img src="globe.svg" class="h-12 w-12 mr-auto ml-auto" alt="Placeholder">
+            <img src="globe.svg" class="h-12 w-12 mr-auto ml-auto rounded-sm" alt="Placeholder">
         {/if}
-        {#if $windows.size < 5}
-         <p class="text-sm w-fit mr-auto ml-auto">{windowTitle}</p>
-        {/if}
+        <p class="text-sm w-fit mr-auto ml-auto">{windowTitle}</p>
     </button>
 </div>

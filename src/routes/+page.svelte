@@ -7,6 +7,7 @@
 	import Shortcut from "$lib/components/desktop/Shortcut.svelte";
 	import DuolingoStreak from "$lib/components/apps/DuolingoStreak.svelte";
 	import FlappyBird from "$lib/components/apps/FlappyBird.svelte";
+	import HappyButton from "$lib/components/apps/HappyButton.svelte";
 </script>
 
 <div class="bg"></div>
@@ -22,6 +23,7 @@
 <Game/>
 <DuolingoStreak />
 <FlappyBird />
+<HappyButton/>
 
 
 <div class="absolute bottom-0 w-full glass flex pl-2 space-x-4">

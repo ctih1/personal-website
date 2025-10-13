@@ -4,6 +4,7 @@
     import type { ManagedWindow } from "$lib/stores";
     import { twMerge } from "tailwind-merge";
 	import consola from "consola";
+	import { debug } from "$lib";
 
     interface Props {
         windowTitle: string;
@@ -13,15 +14,16 @@
     }
 
     let {windowTitle, iconUrl = undefined, overrideWindowClass = undefined, children}: Props = $props();
-
     let element: HTMLDivElement;
     let topBar: HTMLDivElement;
-    let id: number = -1;
+    let id: number = $state(-1);
     let isDragging = false;
     let offsetX: number, offsetY: number;
 
+    let debugLightActive: boolean = $state(false);
+
     let window: ManagedWindow = $state({
-        closed: false,
+        closed: true,
         hidden: false,
         icon: iconUrl,
         title: windowTitle,
@@ -41,7 +43,6 @@
         topBar.addEventListener("mousedown", e => {
             if(window.hidden || window.closed) return;
             focus();
-            consola.debug(`Window #${id} detected possible drag start`);
             isDragging = true;
             offsetX = e.offsetX;
             offsetY = e.offsetY;
@@ -60,7 +61,7 @@
 
 
     function updateStore() {
-        consola.info(`Updating store for window #${id}`);
+        consola.debug(`Updating store for window #${id}`);
         $windows.set(id, window);
         $windows = $windows;
     }
@@ -79,18 +80,24 @@
 
     windows.subscribe(windows => {
         let thisWindow = windows.get(id);
-        if(thisWindow) {
-            consola.info(`Window #${id} Recieved update`);
+        if(thisWindow && thisWindow != window) {
+            consola.trace(`Window #${id} Recieved update`);
             window = thisWindow;
         }
+        if(!debug) return;
+        requestAnimationFrame(() => {
+            debugLightActive = true;
+            setTimeout(() => {
+                debugLightActive = false;
+            }, 100)
+        })
     });
 
-    function focus() {
-        consola.info(`Granting window #${id} focus`);
+    export function focus() {
+        if($windows.get(id)?.focused) {
+            return;
+        }
         $windows.forEach(val => {
-            if(val.focused) {
-                consola.info(`Revoking window #${id} focus`);
-            }
             val.focused = false;
         });
         $windows = $windows;
@@ -102,21 +109,29 @@
 </script>
 
 
-<div onclick={_ => focus()} class:z-50={window.focused} bind:this={element} class:opacity-0={window.hidden || window.closed} class={twMerge("bg-white pl-2 pr-2 w-2xl absolute rounded-2xl drop-shadow-2xl", overrideWindowClass)}>
-    <div bind:this={topBar} role="dialog" tabindex={id} class="top-bar w-full h-10 flex justify-between">
+<div onclick={_ => focus()} class:z-50={window.focused} class:pointer-events-none={window.hidden || window.closed} bind:this={element} class:opacity-0={window.hidden || window.closed} class={twMerge("z-10 rounded-3xl bg-white pl-2 pr-2 pb-2 min-w-80 shadow-5xl absolute h-fit", overrideWindowClass)}>
+    <div bind:this={topBar} role="dialog" tabindex={id} class="top-bar w-full h-10 pt-1 flex justify-between items-center">
         <div class="info flex">
             {#if iconUrl}
             <img class="mr-2" alt={windowTitle + "icon"} width="20px" height="20px" src={iconUrl.toString()}>
             {/if}
-            <p class="text-2xl mix-blend-difference invert grayscale">{windowTitle}</p>
+            <p class="text-xl font-semibold">{windowTitle}</p>
         </div>
 
         <div class="actions items-center">
-            <button class="mix-blend-difference invert grayscale text-2xl" onclick={_ => hide()}>-</button>
-            <button class="mix-blend-difference invert grayscale text-2xl" onclick={_ => close()}>x</button>
+            <button class="text-2x" onclick={_ => hide()}>-</button>
+            <button class="text-2xl" onclick={_ => close()}>x</button>
         </div>
+        {#if debug}
+            <div class="absolute right-20 items-center flex space-x-2 w-20">
+                <p class="w-fit">#{id}</p>
+                <div class:opacity-100={debugLightActive} class="w-4 h-4 rounded-4xl bg-green-600 opacity-0"></div>
+            </div>
+
+        {/if}
     </div>
     <div class="content">
         {@render children?.()}
     </div>
 </div>
+

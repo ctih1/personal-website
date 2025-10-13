@@ -1,31 +1,40 @@
 <script lang="ts">
 	import Icon from "$lib/components/desktop/taskbar/Icon.svelte";
-	import Window from "$lib/components/desktop/Window.svelte";
-	import Example from "$lib/components/windows/Example.svelte";
-	import Game from "$lib/components/windows/Game.svelte";
+	import Window from "$lib/components/desktop/windows/Window.svelte";
+	import Example from "$lib/components/apps/Example.svelte";
+	import Game from "$lib/components/apps/Game.svelte";
 	import { windows } from "$lib/stores";
+	import Shortcut from "$lib/components/desktop/Shortcut.svelte";
+	import DuolingoStreak from "$lib/components/apps/DuolingoStreak.svelte";
+	import FlappyBird from "$lib/components/apps/FlappyBird.svelte";
 </script>
 
 <div class="bg"></div>
-<div id="main-layout" class="w-11/12 max-w-4xl ml-auto mr-auto rounded-xl mt-8 p-2">
-    <h1>Welcome to my website!</h1>
+<div class="desktop grid-cols-9 grid-rows-12">
+    {#each $windows as rawWindow}
+    {@const id = rawWindow[0]}
+    {@const window = rawWindow[1]}
+        <Shortcut icon={window.icon} id={id} windowTitle={window.title} />
+    {/each}
 </div>
 
 <Example/>
 <Game/>
+<DuolingoStreak />
+<FlappyBird />
 
-<div class="absolute bottom-0 w-full bg-white flex pl-2">
+
+<div class="absolute bottom-0 w-full glass flex pl-2 space-x-4">
 {#each $windows as rawWindow}
 {@const id = rawWindow[0]}
 {@const window = rawWindow[1]}
-    <Icon closed={window.closed} hidden={window.hidden} icon={window.icon} windowTitle={window.title} id={id}/>
+    <Icon pinned={window.title === "Example window"} focused={window.focused} closed={window.closed} hidden={window.hidden} icon={window.icon} windowTitle={window.title} id={id}/>
 {/each}
 </div>
 
 <style>
     .bg {
         position: absolute;
-        background-image: url("background.webp");
         background-size: 200%;
         background-position: center;
         top: 0px;
@@ -33,7 +42,6 @@
         min-height: 100vh;
         width: 100vw;
         z-index: -1;
-        filter: blur(8px);
         transform: scale(1.1);
     }
 

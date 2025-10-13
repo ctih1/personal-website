@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { on } from "svelte/events";
-    import Window from "../desktop/Window.svelte";
+    import Window from "../desktop/windows/Window.svelte";
 	import { onMount } from "svelte";
 	import { windows } from "$lib/stores";
 
@@ -10,16 +10,6 @@
     let result: string = $state("");
     let windowElement: Window;
 
-    onMount(() => {
-        const id = windowElement.id;
-        const window =  $windows.get(id)!;
-
-        window.closed = true;
-        window.hidden = true;
-        window.icon = new URL("https://www.frii.site/favicon.svg");
-        window.title = "new title";
-    })
-    
     const guess = () => {
         guesses++;
         if(inputValue > number) {
@@ -35,10 +25,9 @@
 <Window 
     bind:this={windowElement}
     windowTitle="Number guessing game" 
-    overrideWindowClass="bg-black"
 >
     <div id="contents" class="pb-2">
-        <p class="absolute right-10">Guesses: {guesses}</p>
+        <p class="absolute right-10 top-5">Guesses: {guesses}</p>
         <h1>Guess a number!</h1>
         <label for="number-picker">Guess (between 0 and 100): </label>
         <input bind:value={inputValue} class="outline-purple-500 p-1 pl-2 pr-2  transition-[outline] outline-1 hover:outline-2 rounded-xl" min=0 max=100 id="number-picer" type="number">
@@ -46,7 +35,7 @@
         <button onclick={_ => guess()} class="bg-purple-500 rounded-xl p-1 pl-2 pr-2 transition-colors hover:bg-purple-600 active:bg-purple-800">Guess!</button>
 
         <h2>{result}</h2>
-        {#if result === "Correct!"}
+        {#if result === "Correct!"} 
             <button onclick={_ => {
                 number = Math.round(Math.random() * 100);
                 result = "";
@@ -56,10 +45,3 @@
     </div>
 
 </Window>
-
-
-<style>
-    * {
-        color: white;
-    }
-</style>

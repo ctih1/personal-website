@@ -25,7 +25,7 @@
     let velocity = 0;
     let minGap = 150;
     let boardHeight = 600;
-    let scrollSpeed = 3;
+    let scrollSpeed = 4;
 
     let windowElement: Window;
     let paused = $state(true);
@@ -49,10 +49,10 @@
     });
     
 
-    async function pipeLoop() {
+    async function pipeLoop(deltaSeconds: number) {
         pipes.forEach(pair => {
-            pair[0].x -= scrollSpeed;
-            pair[1].x -= scrollSpeed;
+            pair[0].x -= scrollSpeed*deltaSeconds*60;
+            pair[1].x -= scrollSpeed*deltaSeconds*60;
 
             if(birdX + birdWidth > pair[0].x && birdX < pair[0].x+pipeWidth) {
                 if(birdY < pair[0].y+pipeHeight || birdY+birdWidth > pair[1].y) {
@@ -97,7 +97,7 @@
                 velocity -= 35 * deltaSeconds;
                 bird.style.transform=`rotate(${velocity*-2}deg)`
                 birdY -= velocity*deltaSeconds*60;
-                pipeLoop();
+                pipeLoop(deltaSeconds);
             }
 
         }

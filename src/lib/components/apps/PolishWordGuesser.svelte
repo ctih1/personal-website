@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte";
     import Window from "../desktop/windows/Window.svelte";
-    import { Faker, pl } from "@faker-js/faker";
     import words from "$lib/assets/plwords.json";
 
     let word: string = $state("");
@@ -21,8 +20,6 @@
         const ENDING_INDEX = Math.round(Math.random() * (ENDING_CLUSTER.length-1));
         return `${STARTING_CLUSTER.at(STARTING_INDEX)}${CENTRAL_CLUSTER.at(CENTRAL_INDEX)}${ENDING_CLUSTER.at(ENDING_INDEX)}`;
     }
-
-    const faker = new Faker({locale: [pl]});
 
     function createWord() {
         resultText = "";
@@ -54,7 +51,7 @@
 
 <Window 
     bind:this={windowElement}
-    windowTitle="Number guessing game" 
+    windowTitle="Polish word guesser" 
     iconUrl={new URL("pl_flag.svg", window.location.toString())}
 >
 <h2>Polish word guesser</h2>

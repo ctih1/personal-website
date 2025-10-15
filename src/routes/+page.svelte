@@ -9,6 +9,8 @@
 	import FlappyBird from "$lib/components/apps/FlappyBird.svelte";
 	import HappyButton from "$lib/components/apps/HappyButton.svelte";
 	import PolishWordGuesser from "$lib/components/apps/PolishWordGuesser.svelte";
+	import Paint from "$lib/components/apps/Paint.svelte";
+	import Notepad from "$lib/components/apps/Notepad.svelte";
 </script>
 
 <div class="bg"></div>
@@ -26,6 +28,8 @@
 <FlappyBird />
 <HappyButton/>
 <PolishWordGuesser/>
+<Paint/>
+<Notepad/>
 
 
 <div class="absolute bottom-0 w-full glass flex pl-2 space-x-4">
